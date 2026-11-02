@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="控糖减脂">
+<meta name="theme-color" content="#1f7a5c">
+<meta name="format-detection" content="telephone=no">
+<title>控糖减脂 · 随身助手</title>
+<style>
+  :root{
+    --ink:#1c232f; --sub:#6b7688; --line:#e5eaf0; --bg:#f4f6f9; --card:#fff;
+    --brand:#1f7a5c; --soft:#e8f5ef;
+    --g:#2e9e5b; --y:#e0a11b; --r:#d4553a;
+    --nav-h:58px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",sans-serif;
+    font-size:16px; line-height:1.62;
+    padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom) + 8px);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:0 13px;}
+  header{
+    background:linear-gradient(135deg,#1f7a5c,#2a9b74); color:#fff;
+    padding:calc(14px + env(safe-area-inset-top)) 15px 14px;
+  }
+  header h1{margin:0;font-size:18px;font-weight:bold;}
+  header p{margin:2px 0 0;font-size:12.5px;color:#dff3ea;}
+  .goal{display:flex;gap:8px;margin-top:12px;}
+  .goal div{flex:1;background:rgba(255,255,255,.15);border-radius:10px;padding:8px 10px;}
+  .goal b{display:block;font-size:18px;line-height:1.25;}
+  .goal span{font-size:11.5px;color:#dff3ea;}
+  .barwrap{margin-top:11px;}
+  .barwrap .lab{display:flex;justify-content:space-between;font-size:12px;color:#eaf6f1;margin-bottom:4px;}
+  .bar{height:9px;background:rgba(255,255,255,.25);border-radius:6px;overflow:hidden;}
+  .bar i{display:block;height:100%;background:#fff;width:0%;transition:width .35s;}
+  section{display:none;padding:13px 0 6px;}
+  section.on{display:block;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:14px 15px;margin-bottom:11px;}
+  .card h3{margin:0 0 9px;font-size:16px;font-weight:bold;}
+  .hint{font-size:12.8px;color:var(--sub);margin:0 0 9px;}
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px;}
+  .tabs button{
+    border:1px solid var(--line);background:var(--card);color:var(--sub);
+    border-radius:20px;padding:7px 13px;font-size:13.5px;font-family:inherit;cursor:pointer;min-height:34px;
+  }
+  .tabs button.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:bold;}
+  .mealbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px;}
+  .mealbar button{
+    border:1px solid var(--line);background:#fff;color:var(--sub);
+    border-radius:20px;padding:7px 13px;font-size:13.5px;font-family:inherit;cursor:pointer;min-height:34px;
+  }
+  .mealbar button.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:bold;}
+  input[type=text],input[type=number],select{
+    width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;
+    font-size:16px;font-family:inherit;background:#fff;color:var(--ink);min-height:44px;
+  }
+  .row{display:flex;gap:10px;align-items:center;margin-top:9px;}
+  .row input{flex:1;text-align:center;font-size:17px;}
+  .row .u{font-size:14px;color:var(--sub);min-width:52px;}
+  .big{text-align:center;font-size:13.5px;color:var(--sub);margin:11px 0 13px;}
+  .big b{font-size:31px;color:var(--brand);display:block;line-height:1.15;}
+  .add{
+    width:100%;background:var(--brand);color:#fff;border:0;border-radius:11px;
+    padding:14px;font-size:16.5px;font-family:inherit;cursor:pointer;font-weight:bold;min-height:48px;
+  }
+  .add:active{background:#186349;}
+  .add.ghost{background:#fff;color:var(--brand);border:1px solid var(--brand);margin-top:9px;font-weight:normal;}
+  ul.log{list-style:none;margin:0;padding:0;}
+  ul.log li{
+    display:flex;justify-content:space-between;align-items:flex-start;gap:10px;
+    padding:9px 0;border-bottom:1px dashed var(--line);font-size:14.5px;
+  }
+  ul.log li:last-child{border:0;}
+  ul.log .lft{flex:1;}
+  ul.log .meal{
+    display:inline-block;font-size:11.5px;color:var(--brand);background:var(--soft);
+    border-radius:5px;padding:1px 6px;margin-right:6px;
+  }
+  ul.log .del{color:var(--r);font-size:19px;background:none;border:0;cursor:pointer;padding:0 2px;font-family:inherit;min-height:32px;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th,td{border:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top;}
+  th{background:#eef3f9;}
+  .advice{background:var(--soft);border-left:4px solid var(--brand);border-radius:8px;padding:11px 13px;font-size:14px;margin-top:10px;}
+  .warn{background:#fdf1ea;border-left:4px solid var(--r);border-radius:8px;padding:11px 13px;font-size:14px;margin-top:10px;}
+  .plan{background:#fff;border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:9px;padding:11px 13px;font-size:14px;margin-top:10px;}
+  .plan b{color:var(--brand);}
+  .stage{border-left:4px solid var(--brand);border-radius:8px;padding:10px 13px;background:#fbfdfc;border:1px solid var(--line);margin-bottom:9px;}
+  .stage b{font-size:15px;}
+  .stage .rg{font-size:12.5px;color:var(--sub);}
+  .stage ul{margin:6px 0 0;padding-left:18px;font-size:13.5px;}
+  nav{
+    position:fixed;left:0;right:0;bottom:0;height:calc(var(--nav-h) + env(safe-area-inset-bottom));
+    background:rgba(255,255,255,.97);border-top:1px solid var(--line);display:flex;z-index:30;
+    padding-bottom:env(safe-area-inset-bottom);
+    -webkit-backdrop-filter:saturate(180%) blur(8px);
+  }
+  nav button{
+    flex:1;border:0;background:none;font-family:inherit;font-size:11.5px;color:var(--sub);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;min-height:52px;
+  }
+  nav button.on{color:var(--brand);font-weight:bold;}
+  nav button i{font-style:normal;font-size:18px;line-height:1;}
+  .empty{text-align:center;color:var(--sub);font-size:13.5px;padding:12px 0;}
+  .foot{font-size:12.3px;color:var(--sub);text-align:center;padding:4px 0 12px;line-height:1.7;}
+  .pill{display:inline-block;background:var(--soft);color:var(--brand);border-radius:20px;padding:4px 10px;font-size:12.5px;margin:0 5px 5px 0;}
+  .rec{background:#fbfdfc;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px;}
+  .rec .t{font-size:15.5px;font-weight:bold;color:var(--brand);margin-bottom:3px;}
+  .rec .m{font-size:12.5px;color:var(--sub);margin-bottom:8px;}
+  .rec ol{margin:0;padding-left:19px;font-size:14px;}
+  .rec ol li{margin-bottom:4px;}
+  .why{font-size:12.8px;color:var(--brand);background:#f2faf6;border-radius:7px;padding:7px 10px;margin-top:8px;}
+  .swap{
+    width:100%;background:#fff;border:1px solid var(--brand);color:var(--brand);
+    border-radius:10px;padding:11px;font-size:14.5px;font-family:inherit;cursor:pointer;min-height:44px;
+  }
+  .chk{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line);font-size:14.5px;}
+  .chk:last-child{border:0;}
+  .chk button{
+    margin-left:auto;border:1px solid var(--line);background:#fff;border-radius:8px;
+    padding:6px 14px;font-size:13.5px;font-family:inherit;color:var(--sub);cursor:pointer;min-height:36px;
+  }
+  .chk button.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:bold;}
+  .kpi3{display:flex;gap:8px;margin-bottom:10px;}
+  .kpi3 div{flex:1;background:#f8fafb;border:1px solid var(--line);border-radius:9px;padding:9px 10px;text-align:center;}
+  .kpi3 b{display:block;font-size:19px;color:var(--brand);line-height:1.2;}
+  .kpi3 span{font-size:11.5px;color:var(--sub);}
+  .trend{display:flex;align-items:flex-end;gap:5px;height:88px;padding:6px 2px;border-bottom:1px solid var(--line);margin-bottom:6px;}
+  .trend div{flex:1;background:var(--brand);border-radius:3px 3px 0 0;min-height:4px;position:relative;}
+  .trend em{position:absolute;bottom:-19px;left:0;right:0;text-align:center;font-style:normal;font-size:10px;color:var(--sub);}
+  .tips{font-size:13.8px;padding-left:19px;margin:0;}
+  .tips li{margin-bottom:5px;}
+  .flist{display:flex;flex-direction:column;gap:6px;max-height:330px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  .fitem{
+    display:flex;justify-content:space-between;align-items:center;gap:8px;text-align:left;
+    background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+    font-size:14.5px;font-family:inherit;color:var(--ink);cursor:pointer;width:100%;
+  }
+  .fitem:active{background:var(--soft);}
+  .fitem.on{border-color:var(--brand);background:var(--soft);font-weight:bold;}
+  .fitem em{font-style:normal;font-size:12.5px;color:var(--sub);font-weight:normal;}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+  .g{background:var(--g);} .y{background:var(--y);} .r{background:var(--r);}
+  .selbox{background:#f8fafb;border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-top:10px;}
+  .selbox .nm{font-size:15px;font-weight:bold;margin-bottom:8px;}
+  .combo{
+    text-align:left;background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:11px 12px;width:100%;font-size:14.5px;font-family:inherit;color:var(--ink);cursor:pointer;margin-bottom:6px;
+  }
+  .combo.on{border-color:var(--brand);background:var(--soft);}
+  .combo .cn{font-weight:bold;}
+  .combo .cm{font-size:12.5px;color:var(--sub);}
+  .parts{background:#fbfdfc;border:1px dashed var(--line);border-radius:9px;padding:10px 12px;margin:2px 0 10px;font-size:13.5px;}
+  .parts li{margin-bottom:3px;}
+  .wrow{display:flex;gap:9px;margin-top:9px;}
+  .wrow input{flex:1;text-align:center;font-size:17px;}
+  .wrow span{font-size:13px;color:var(--sub);align-self:center;min-width:38px;}
+  .backup{font-size:12.5px;color:var(--sub);word-break:break-all;background:#f8fafb;border:1px solid var(--line);border-radius:8px;padding:9px 11px;margin-top:8px;max-height:110px;overflow:auto;}
+  .mline{display:flex;gap:9px;align-items:center;margin-bottom:9px;}
+  .mline label{font-size:14px;min-width:70px;}
+  .mline input{flex:1;text-align:center;}
+  #photoIn{display:none;}
+  .ph{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px;}
+  .ph img{width:78px;height:78px;object-fit:cover;border-radius:9px;border:1px solid var(--line);}
+  .ph .pwrap{position:relative;}
+  .ph .pwrap button{position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:var(--r);color:#fff;border:0;font-size:14px;line-height:1;cursor:pointer;font-family:inherit;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>控糖减脂 · 随身助手</h1>
+    <p id="hSub">第一程 82 → 75 kg · 蛋白：鸡蛋 豆腐 牛奶 鸡腿肉</p>
+    <div class="goal">
+      <div><b id="gNow">0</b><span>今日已摄入</span></div>
+      <div><b id="gLeft">1700</b><span>今日额度还剩</span></div>
+      <div><b id="gPro">0</b><span>蛋白（克）</span></div>
+    </div>
+    <div class="barwrap">
+      <div class="lab"><span id="pct">0% · 蛋白 0/130 克</span><span id="goalLab">上限 1700 千卡</span></div>
+      <div class="bar"><i id="bar"></i></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section id="s1" class="on">
+  <div class="card">
+    <h3>记一餐</h3>
+    <p class="hint">先选餐次，再搜或点选食物。菜名对不上就用「复合菜」或「手估」。</p>
+    <div class="mealbar" id="meals"></div>
+    <input type="text" id="search" placeholder="搜索：豆腐、鸡蛋、泡馍、煮馍…" oninput="renderList()">
+    <div class="tabs" id="cats" style="margin-top:9px"></div>
+    <div id="catArea">
+      <div class="flist" id="flist"></div>
+      <div id="selBox"></div>
+    </div>
+    <div id="comboArea" style="display:none"></div>
+    <div id="manualArea" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <h3>蛋白粉怎么喝</h3>
+    <p class="hint">补蛋白最省事的一条路，但它只是「补」，不能当正餐。</p>
+    <ul class="tips">
+      <li><b>每天 1-2 勺就够</b>（约 24-48 克蛋白）。你全天目标 <span id="proTip">130</span> 克，先从饭里吃，缺口再用粉补，别反过来。</li>
+      <li><b>冲水或冲牛奶都行。</b>冲牛奶蛋白更高（约 32 克/杯），但热量也多 135 千卡，冲水更利于控热量。</li>
+      <li><b>别选增肌粉。</b>碳水加得太多，减脂期会白吃一堆热量，认准「乳清」或「分离乳清」。</li>
+      <li><b>放哪一餐都行</b>，最实用的两个时点：下午犯困时当加餐，或晚餐蛋白没吃够时补一勺。</li>
+      <li><b>热量要算进去。</b>一勺约 120 千卡，在「蛋白」分类里选「蛋白粉（乳清）」，默认 1 勺，直接加入。</li>
+    </ul>
+    <div class="warn">蛋白粉不能替代睡眠和力量训练。蛋白吃够是为了保肌肉，真正决定掉不掉秤的还是总热量缺口。</div>
+  </div>
+
+  <div class="card">
+    <h3>拍照存档</h3>
+    <p class="hint">吃不准的东西先拍下来。拍照时把<b>握紧的拳头放在盘子边</b>当参照，之后把图发给我，我按参照帮你估份量和热量。</p>
+    <button class="swap" onclick="document.getElementById('photoIn').click()">拍照 / 选图</button>
+    <input type="file" id="photoIn" accept="image/*" capture="environment" onchange="onPhoto(event)">
+    <div class="ph" id="phBox"></div>
+  </div>
+
+  <div class="card">
+    <h3>今日记录</h3>
+    <ul class="log" id="log"></ul>
+    <div class="empty" id="logEmpty">还没有记录。</div>
+  </div>
+</section>
+
+<section id="s2">
+  <div class="card">
+    <h3>今日分析</h3>
+    <div class="kpi3">
+      <div><b id="aUsed">0</b><span>已摄入（千卡）</span></div>
+      <div><b id="aPro">0</b><span>蛋白（克）</span></div>
+      <div><b id="aLeft">1700</b><span>还剩（千卡）</span></div>
+    </div>
+    <table id="mealTbl"><tr><th>餐次</th><th>内容</th><th>热量</th></tr></table>
+    <div id="diag"></div>
+  </div>
+
+  <div class="card">
+    <h3>下一餐怎么吃</h3>
+    <div id="nextMeal"></div>
+  </div>
+
+  <div class="card">
+    <h3>今天的三件事</h3>
+    <div class="chk">按「蔬菜 → 蛋白 → 主食」的顺序吃<button id="c1" onclick="chk(1)">未做</button></div>
+    <div class="chk">每餐后走 10-20 分钟<button id="c2" onclick="chk(2)">未做</button></div>
+    <div class="chk">18:30 先喝水 + 番茄，别空腹进夜市<button id="c3" onclick="chk(3)">未做</button></div>
+  </div>
+
+  <div class="card">
+    <h3>喝水</h3>
+    <div class="row">
+      <input id="waterIn" type="number" inputmode="numeric" placeholder="0">
+      <span class="u">毫升</span>
+    </div>
+    <button class="add ghost" onclick="addWater()">加上去</button>
+    <div class="hint" style="margin-top:9px">今日已喝 <b id="waterNow">0</b> 毫升 / 目标 1500-2000。含糖饮料不算。</div>
+  </div>
+</section>
+
+<section id="s3">
+  <div class="card">
+    <h3>今天吃什么</h3>
+    <p class="hint">推荐跟着你今天吃了什么、还剩多少额度、蛋白差多少自动变。可以直接加入对应餐次。</p>
+    <div class="mealbar" id="rmeals"></div>
+    <div id="recBox"></div>
+    <button class="add" id="recAdd" style="margin-top:10px">加入午餐</button>
+    <button class="swap" style="margin-top:9px" onclick="swap()">换一个推荐</button>
+  </div>
+</section>
+
+<section id="s4">
+  <div class="card">
+    <h3>记体重</h3>
+    <p class="hint">每周日晨起空腹、排空、穿同样衣物称一次，同时量肚脐一圈腰围。只看周与周的趋势。</p>
+    <div class="wrow">
+      <input id="wIn" type="number" inputmode="decimal" step="0.1" placeholder="82.0">
+      <span>公斤</span>
+    </div>
+    <div class="wrow">
+      <input id="wcIn" type="number" inputmode="decimal" step="0.5" placeholder="92">
+      <span>腰围</span>
+    </div>
+    <button class="add" style="margin-top:11px" onclick="saveW()">保存本周记录</button>
+    <div id="wAdvice"></div>
+  </div>
+
+  <div class="card">
+    <h3>体重趋势与计划调整</h3>
+    <div class="trend" id="trend"></div>
+    <div style="height:16px"></div>
+    <table id="wTbl"><tr><th>日期</th><th>体重</th><th>腰围</th><th>较上次</th><th></th></tr></table>
+    <div id="planAdj"></div>
+  </div>
+
+  <div class="card">
+    <h3>数据备份</h3>
+    <p class="hint">数据存在本机，清缓存或换机会丢。定期复制这段文本存到备忘录（不含照片）。</p>
+    <button class="swap" onclick="backup()">导出数据</button>
+    <div class="backup" id="bakBox">点上面按钮生成备份文本</div>
+  </div>
+</section>
+
+<section id="s5">
+  <div class="card">
+    <h3>分程路线</h3>
+    <p class="hint" id="routeHint">不一次排完，先拿下第一程。周次从你开始那天算起。</p>
+    <div class="stage">
+      <b id="routeTitle">第一程 12 周</b>
+      <div class="rg" id="routeRange">开始后第 1 周至第 12 周</div>
+    </div>
+    <div class="stage">
+      <b>① 顺序与点单改造期</b>
+      <div class="rg">第 1-2 周</div>
+      <ul><li>只改顺序，不算热量、不减份量</li><li>每餐后走 10-20 分钟</li></ul>
+    </div>
+    <div class="stage">
+      <b>② 份量落地与力量起步期</b>
+      <div class="rg">第 3-5 周</div>
+      <ul><li>主食每餐 1 拳头，蛋白按「我的」页目标</li><li>每周 2 次居家力量，各 25 分钟</li></ul>
+    </div>
+    <div class="stage">
+      <b>③ 巩固与首次复评</b>
+      <div class="rg">第 6-8 周</div>
+      <ul><li>力量加到每周 3 次</li><li>第 8 周按新体重重算热量目标</li></ul>
+    </div>
+    <div class="stage">
+      <b>④ 收尾与第二程决策</b>
+      <div class="rg">第 9-12 周</div>
+      <ul><li>冲到第一程目标</li><li>写下剩下的第二程方案</li></ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>每周检查与调整</h3>
+    <table>
+      <tr><th>信号</th><th>怎么调</th></tr>
+      <tr><td>连续 2 周降不到 0.3 kg</td><td>主食每餐再减 1/3，或每日多走 10 分钟，二选一</td></tr>
+      <tr><td>每周掉超过 1 kg、乏力掉发</td><td>每日加 100-150 千卡，优先主食或奶</td></tr>
+      <tr><td>一周疲劳睡不好</td><td>力量减 1 次，先把睡眠补回 7 小时</td></tr>
+      <tr><td>腰围变小但体重没动</td><td>不动计划，体重不是唯一指标</td></tr>
+      <tr><td>降到 78 kg 以下</td><td>按新体重下调 100-150 千卡</td></tr>
+      <tr><td>执行率低于 60%</td><td>先缩短单次时间或减少频率，别靠加量补</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>力量日处方（无器械，25-30 分钟）</h3>
+    <table>
+      <tr><th>动作</th><th>组次</th><th>用力程度</th></tr>
+      <tr><td>热身：踏步 + 关节活动</td><td>5 分钟</td><td>很轻松</td></tr>
+      <tr><td>椅子深蹲</td><td>3 组 × 10-12 次</td><td>中等偏上</td></tr>
+      <tr><td>跪姿俯卧撑</td><td>3 组 × 8-10 次</td><td>较难</td></tr>
+      <tr><td>臀桥</td><td>3 组 × 12-15 次</td><td>中等</td></tr>
+      <tr><td>平板支撑</td><td>3 组 × 20-30 秒</td><td>中等</td></tr>
+      <tr><td>站姿提踵</td><td>3 组 × 15 次</td><td>中等</td></tr>
+      <tr><td>拉伸放松</td><td>5 分钟</td><td>放松</td></tr>
+    </table>
+    <div class="advice">时间不够的最小方案：深蹲 2 组 + 俯卧撑 2 组 + 平板支撑 1 组，约 10 分钟。动作可以砍，进食顺序和每日步行不能砍。</div>
+  </div>
+
+  <div class="card">
+    <h3>夜市防线（19:00 必经）</h3>
+    <p><span class="pill">下班前喝水 + 番茄或 10 颗坚果</span><span class="pill">先吃正餐再逛</span><span class="pill">只买 1 样</span><span class="pill">绕路或延迟 10 分钟</span></p>
+    <p class="hint" style="margin-top:8px">可买：瘦肉烤串 5-8 串、茶叶蛋、无糖酸奶、玉米、小份烤红薯。<br>别买：炸串、臭豆腐、炒粉炒面、烤面筋、奶茶、甜品。</p>
+    <div class="warn">空腹逛夜市基本必买。18:30 那口水和小番茄，是整份计划性价比最高的动作。</div>
+  </div>
+
+  <div class="foot">
+    热量为常见做法估算值，误差约正负 20%，外食差异更大，按红绿灯选比死磕数字有用。<br>
+    每日摄入不低于 1500 千卡；运动中胸痛、晕厥、异常心悸立即停止并就医。<br>
+    本工具只做记录和估算，不替代医生和营养师的个体化建议。
+  </div>
+</section>
+
+</div>
+
+<section id="s6">
+  <div class="card">
+    <h3>我的资料</h3>
+    <p class="hint">填一次就自动算出你的每日热量和蛋白目标。这些只存在你自己手机里，不会上传给任何人。</p>
+    <div class="mline"><label>性别</label>
+      <select id="stSex"><option value="男">男</option><option value="女">女</option></select></div>
+    <div class="mline"><label>年龄</label><input id="stAge" type="number" inputmode="numeric"><span class="u">岁</span></div>
+    <div class="mline"><label>身高</label><input id="stH" type="number" inputmode="decimal"><span class="u">厘米</span></div>
+    <div class="mline"><label>现在体重</label><input id="stW" type="number" inputmode="decimal" step="0.1"><span class="u">公斤</span></div>
+    <div class="mline"><label>目标体重</label><input id="stTg" type="number" inputmode="decimal" step="0.1"><span class="u">公斤</span></div>
+    <div class="mline"><label>日常活动</label>
+      <select id="stAct">
+        <option value="1.2">久坐（办公室，几乎不运动）</option>
+        <option value="1.375">轻度（每周动 1-3 次）</option>
+        <option value="1.55">中度（每周动 3-5 次）</option>
+        <option value="1.725">高度（体力活或每天练）</option>
+      </select></div>
+    <button class="add" onclick="calcMine()">算出我的目标</button>
+    <div id="calcBox"></div>
+    <div class="mline" style="margin-top:11px"><label>每日热量</label><input id="stKcal" type="number" inputmode="numeric"><span class="u">千卡</span></div>
+    <div class="mline"><label>每日蛋白</label><input id="stPro" type="number" inputmode="numeric"><span class="u">克</span></div>
+    <div class="mline"><label>开始日期</label><input id="stStart" type="date"><span class="u">选填</span></div>
+    <button class="add" style="margin-top:11px" onclick="saveSettings()">保存</button>
+    <div id="stMsg"></div>
+  </div>
+
+  <div class="card">
+    <h3>忌口</h3>
+    <p class="hint">勾上的东西会从食物库和推荐里全部消失。</p>
+    <div class="tabs" id="avoidBox"></div>
+    <div class="mline" style="margin-top:9px"><label>其他忌口</label>
+      <input id="avoidIn" type="text" placeholder="例如：香菜，输入后点添加"></div>
+    <button class="swap" onclick="addAvoid()">加一个忌口关键词</button>
+  </div>
+
+  <div class="card">
+    <h3>加自己的食物</h3>
+    <p class="hint">食物库里没有的，自己加一条，之后所有页面都能选到。</p>
+    <div class="mline"><label>名称</label><input id="mfN" type="text" placeholder="比如：妈妈做的臊子面"></div>
+    <div class="mline"><label>单位</label><input id="mfU" type="text" placeholder="份 / 碗 / 个 / 100克"></div>
+    <div class="mline"><label>热量</label><input id="mfK" type="number" inputmode="numeric" placeholder="千卡"><span class="u">千卡</span></div>
+    <div class="mline"><label>蛋白</label><input id="mfP" type="number" inputmode="decimal" placeholder="克"><span class="u">克</span></div>
+    <button class="add" style="margin-top:9px" onclick="addMyFood()">加到食物库</button>
+    <div class="flist" id="myFoodBox" style="margin-top:10px;max-height:200px"></div>
+  </div>
+
+  <div class="card">
+    <h3>分享给别人</h3>
+    <ul class="tips">
+      <li><b>直接把 HTML 文件发给对方就行</b>（微信、邮件、AirDrop 都可以）。对方用手机浏览器打开，记的是<b>他自己的</b>数据，跟你的完全独立，互不影响。</li>
+      <li>对方第一次打开，请先让他到这个「我的」页填一遍资料，算出属于他的热量和蛋白目标。</li>
+      <li>食物库是按你的口味建的（以鸡蛋、豆腐、牛奶、鸡腿肉为主）。别人常吃的菜如果找不到，用上面的「加自己的食物」补一条，或者用「手估」按拳头算。</li>
+      <li>数据存在各自手机的浏览器里。<b>换手机、清缓存会丢</b>，建议定期到「体重」页点导出数据，把文本存到备忘录。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h3>清空数据</h3>
+    <p class="hint">只影响这台手机。清空后今天记录、体重历史、自定义食物都会消失，无法恢复。</p>
+    <button class="swap" onclick="resetAll()">清空这台手机上的全部数据</button>
+  </div>
+</section>
+
+<nav>
+  <button class="on" onclick="go(1,this)"><i>＋</i>记一餐</button>
+  <button onclick="go(2,this)"><i>📊</i>分析</button>
+  <button onclick="go(3,this)"><i>🍚</i>吃什么</button>
+  <button onclick="go(4,this)"><i>⚖️</i>体重</button>
+  <button onclick="go(5,this)"><i>🎯</i>路线</button>
+  <button onclick="go(6,this)"><i>🙋</i>我的</button>
+</nav>
+
+<script>
+var FOODS = [
+  {f:"蛋白粉（乳清）",u:"勺",k:120,p:24,c:"蛋白",l:"g",d:1,tip:"1 勺约 30 克；每天 1-2 勺，摇在水或牛奶里"},
+  {f:"蛋白粉（分离乳清）",u:"勺",k:110,p:26,c:"蛋白",l:"g",d:1,tip:"蛋白更高、碳水更低，价格贵一些"},
+  {f:"蛋白粉（酪蛋白）",u:"勺",k:120,p:24,c:"蛋白",l:"g",d:1,tip:"吸收慢，适合睡前喝"},
+  {f:"增肌粉",u:"勺",k:350,p:30,c:"蛋白",l:"r",d:1,tip:"红灯：碳水很高，减脂期别选"},
+  {f:"大豆蛋白粉",u:"勺",k:100,p:22,c:"蛋白",l:"g",d:1,tip:"植物蛋白，乳糖不耐可选"},
+  {f:"蛋白粉冲牛奶",u:"杯",k:255,p:32,c:"蛋白",l:"g",d:1,tip:"1 勺粉 + 250 毫升牛奶，蛋白最省事的一杯"},
+  {f:"鸡蛋",u:"个",k:75,p:7,c:"蛋白",l:"g",d:1,tip:"主力蛋白，一天 2-3 个没问题"},
+  {f:"鸡腿肉（去皮）",u:"个",k:150,p:20,c:"蛋白",l:"g",d:1,tip:"首选肉类，去皮能省一半油"},
+  {f:"鸡胸肉",u:"掌心",k:150,p:25,c:"蛋白",l:"g",d:1,tip:"轻食店好点"},
+  {f:"瘦猪肉/里脊",u:"掌心",k:170,p:22,c:"蛋白",l:"y",d:1,tip:"比牛肉便宜，选瘦的"},
+  {f:"牛羊肉",u:"掌心",k:180,p:22,c:"蛋白",l:"y",d:1,tip:"泡馍水盆里的肉，选瘦的"},
+  {f:"豆腐",u:"份",k:80,p:8,c:"蛋白",l:"g",d:1,tip:"1 份约 100 克；烩菜麻辣烫里都有"},
+  {f:"豆干/豆腐皮",u:"份",k:140,p:14,c:"蛋白",l:"g",d:1,tip:"1 份约 100 克，蛋白密度高"},
+  {f:"牛奶",u:"毫升",k:0.54,p:0.032,c:"蛋白",l:"g",d:250,tip:"每天 250 毫升打底"},
+  {f:"无糖豆浆",u:"毫升",k:0.32,p:0.028,c:"蛋白",l:"g",d:250,tip:"植物蛋白，外食好买"},
+  {f:"无糖酸奶",u:"杯",k:90,p:8,c:"蛋白",l:"g",d:1,tip:"下午加餐首选"},
+  {f:"牛奶（全脂）",u:"毫升",k:0.65,p:0.033,c:"蛋白",l:"y",d:250,tip:"比脱脂香，热量高一点"},
+  {f:"米饭",u:"拳头",k:175,p:4,c:"主食",l:"g",d:1,tip:"午餐 1 拳头，晚餐减半"},
+  {f:"杂粮饭/糙米饭",u:"拳头",k:165,p:5,c:"主食",l:"g",d:1,tip:"比白米更顶饱"},
+  {f:"馒头/馍",u:"个",k:235,p:7,c:"主食",l:"y",d:1,tip:"半个起"},
+  {f:"玉米",u:"根",k:200,p:7,c:"主食",l:"g",d:1,tip:"夜市可选项，可当主食"},
+  {f:"烤红薯",u:"个",k:130,p:2,c:"主食",l:"g",d:1,tip:"夜市可选项，挑小的"},
+  {f:"面条",u:"拳头",k:165,p:5,c:"面食",l:"y",d:1,tip:"按拳头算比按份准"},
+  {f:"油泼面/臊子面",u:"份",k:700,p:18,c:"面食",l:"r",d:1,tip:"红灯：吃一半，加青菜和蛋"},
+  {f:"肉夹馍",u:"个",k:450,p:16,c:"面食",l:"y",d:1,tip:"吃半个，配凉拌菜"},
+  {f:"凉皮",u:"份",k:350,p:6,c:"面食",l:"y",d:1,tip:"半份，加豆干或蛋"},
+  {f:"泡馍",u:"份",k:900,p:35,c:"面食",l:"r",d:1,tip:"只掰 1 个馍，多要肉"},
+  {f:"水盆羊肉",u:"份",k:600,p:38,c:"面食",l:"y",d:1,tip:"馍少要一个"},
+  {f:"胡辣汤",u:"碗",k:200,p:8,c:"面食",l:"y",d:1,tip:"别配油条"},
+  {f:"油条",u:"根",k:230,p:5,c:"面食",l:"r",d:1,tip:"早餐避开"},
+  {f:"麻食/烩麻食",u:"份",k:600,p:18,c:"面食",l:"y",d:1,tip:"面疙瘩，主食为主，少喝汤"},
+  {f:"水饺",u:"个",k:45,p:2,c:"面食",l:"y",d:10,tip:"酸汤水饺一次约 12 个"},
+  {f:"煎饼果子",u:"份",k:450,p:12,c:"面食",l:"y",d:1,tip:"加两个蛋，薄脆少要"},
+  {f:"甑糕/镜糕",u:"份",k:350,p:3,c:"面食",l:"r",d:1,tip:"甜食，控糖期避开"},
+  {f:"绿叶蔬菜",u:"拳头",k:30,p:2,c:"蔬菜",l:"g",d:2,tip:"每餐 2 拳头，先吃"},
+  {f:"西兰花",u:"拳头",k:35,p:3,c:"蔬菜",l:"g",d:2,tip:"轻食店常备"},
+  {f:"香菇/平菇",u:"拳头",k:30,p:3,c:"蔬菜",l:"g",d:1,tip:"菌菇类，热量低耐放"},
+  {f:"黄瓜/番茄",u:"个",k:25,p:1,c:"蔬菜",l:"g",d:1,tip:"下班前垫一口用"},
+  {f:"青椒/木耳/豆芽",u:"拳头",k:30,p:2,c:"蔬菜",l:"g",d:2,tip:"便宜耐放热量低"},
+  {f:"油泼/干煸蔬菜",u:"拳头",k:90,p:2,c:"蔬菜",l:"y",d:1,tip:"吸油，按 2-3 倍算"},
+  {f:"麻辣烫（菜多）",u:"份",k:450,p:22,c:"外食",l:"y",d:1,tip:"鸡腿肉+豆腐+青菜+香菇"},
+  {f:"冒菜",u:"份",k:600,p:25,c:"外食",l:"y",d:1,tip:"主食半份或不选"},
+  {f:"黄焖鸡（含饭）",u:"份",k:800,p:35,c:"外食",l:"y",d:1,tip:"米饭吃 2/3，汤汁少拌"},
+  {f:"鸡腿饭/照烧鸡",u:"份",k:650,p:32,c:"外食",l:"y",d:1,tip:"去皮，米饭减半"},
+  {f:"盖浇饭",u:"份",k:700,p:25,c:"外食",l:"y",d:1,tip:"米饭吃 2/3，汤汁少拌"},
+  {f:"沙县鸡腿饭",u:"份",k:620,p:34,c:"外食",l:"y",d:1,tip:"去皮，加一份烫青菜"},
+  {f:"轻食碗（鸡胸）",u:"份",k:450,p:38,c:"外食",l:"g",d:1,tip:"酱选油醋汁，不要沙拉酱"},
+  {f:"瘦肉烤串",u:"串",k:40,p:5,c:"夜市",l:"g",d:5,tip:"5-8 串没问题，少刷酱"},
+  {f:"茶叶蛋",u:"个",k:80,p:7,c:"夜市",l:"g",d:1,tip:"夜市可选项"},
+  {f:"烤面筋",u:"串",k:110,p:4,c:"夜市",l:"r",d:1,tip:"高油高盐，避开"},
+  {f:"炸串/臭豆腐",u:"份",k:380,p:10,c:"夜市",l:"r",d:1,tip:"夜市避开"},
+  {f:"炒粉/炒面",u:"份",k:700,p:15,c:"夜市",l:"r",d:1,tip:"夜市避开"},
+  {f:"苹果",u:"个",k:95,p:0,c:"其他",l:"g",d:1,tip:"整果吃，别榨汁"},
+  {f:"坚果",u:"把",k:80,p:3,c:"其他",l:"y",d:1,tip:"1 把约 10 颗；下班前垫一口，别整袋"},
+  {f:"啤酒",u:"瓶",k:150,p:1,c:"其他",l:"r",d:1,tip:"聚餐换无糖饮料"},
+  {f:"奶茶",u:"杯",k:400,p:3,c:"其他",l:"r",d:1,tip:"换无糖茶或黑咖啡"},
+  {f:"冰峰/含糖汽水",u:"瓶",k:150,p:0,c:"其他",l:"r",d:1,tip:"三秦套餐里的糖，换成无糖"},
+  {f:"无糖茶/黑咖啡",u:"杯",k:5,p:0,c:"其他",l:"g",d:1,tip:"随便喝"}
+];
+
+var COMBO = [
+  {n:"豆腐烩菜煮馍",m:"西安常见：豆腐 + 烩菜 + 馍泡着吃",parts:[["豆腐",2],["油泼/干煸蔬菜",1.5],["馒头/馍",1]]},
+  {n:"羊肉泡馍",m:"馍 + 羊肉 + 粉丝汤",parts:[["馒头/馍",1],["牛羊肉",1],["油泼/干煸蔬菜",0.5]]},
+  {n:"水盆羊肉",m:"馍 + 羊肉 + 汤",parts:[["馒头/馍",1],["牛羊肉",2],["黄瓜/番茄",1]]},
+  {n:"三秦套餐（凉皮+肉夹馍）",m:"半份凉皮 + 半个馍，别喝含糖汽水",parts:[["凉皮",0.5],["肉夹馍",0.5],["豆干/豆腐皮",1]]},
+  {n:"胡辣汤 + 油条",m:"油条半根，别整根",parts:[["胡辣汤",1],["油条",0.5],["鸡蛋",1]]},
+  {n:"豆腐脑 + 鸡蛋",m:"咸的豆腐脑配 2 个蛋",parts:[["豆腐",1],["鸡蛋",2]]},
+  {n:"油泼面 + 加料",m:"面吃一半，加青菜和蛋",parts:[["油泼面/臊子面",0.5],["鸡蛋",1],["绿叶蔬菜",1]]},
+  {n:"酸汤水饺",m:"12 个水饺，配青菜",parts:[["水饺",12],["绿叶蔬菜",1]]},
+  {n:"麻食 / 烩麻食",m:"面疙瘩为主，加蛋加菜",parts:[["麻食/烩麻食",0.7],["鸡蛋",1],["绿叶蔬菜",1]]},
+  {n:"菜夹馍 / 蛋菜夹馍",m:"馍夹蛋和菜，比肉夹馍好",parts:[["馒头/馍",1],["鸡蛋",2],["绿叶蔬菜",0.5]]},
+  {n:"粉汤羊血 + 馍",m:"羊血高蛋白低脂，馍半个",parts:[["牛羊肉",1],["馒头/馍",0.5],["绿叶蔬菜",1]]},
+  {n:"煎饼果子",m:"加两个蛋，薄脆少要",parts:[["煎饼果子",1],["鸡蛋",1]]},
+  {n:"鸡汤面 / 刀削面",m:"面吃 2/3，加蛋加豆干",parts:[["面条",1],["鸡腿肉（去皮）",1],["豆干/豆腐皮",1]]},
+  {n:"烤肉 + 烤饼",m:"瘦肉串配半个馍",parts:[["瘦肉烤串",6],["馒头/馍",0.5],["黄瓜/番茄",1]]},
+  {n:"冒菜 + 半份米饭",m:"豆腐豆皮为主，不选方便面",parts:[["冒菜",1],["米饭",0.5]]},
+  {n:"麻辣烫 + 半份主食",m:"菜多肉够，主食减半",parts:[["麻辣烫（菜多）",1],["米饭",0.5]]},
+  {n:"黄焖鸡 + 米饭",m:"青椒先吃，米饭 2/3，少拌汤汁",parts:[["黄焖鸡（含饭）",1],["青椒/木耳/豆芽",1]]},
+  {n:"家常炒菜 + 米饭",m:"一荤两素配 1 拳头米饭",parts:[["鸡腿肉（去皮）",1],["绿叶蔬菜",2],["米饭",1]]}
+];
+
+var LUNCH = [
+  {t:"黄焖鸡（少汁）",k:600,p:32,s:["点小份，备注多青椒少汤汁","先吃青椒和配菜，再吃鸡肉","米饭只吃 2/3 拳头，别拌汤汁"]},
+  {t:"麻辣烫 · 高蛋白版",k:480,p:30,s:["选鸡腿肉、豆腐、豆皮、香菇、绿叶菜各一份","主食半份或不选","汤少喝，油都在汤里"]},
+  {t:"鸡腿饭 / 照烧鸡腿饭",k:600,p:33,s:["鸡腿去皮吃，酱汁少淋","米饭吃一半","加一份西兰花或青菜"]},
+  {t:"冒菜 · 豆腐为主",k:550,p:28,s:["选豆腐、豆皮、鸡腿肉、香菇、青菜","不选方便面和宽粉","主食半份"]},
+  {t:"沙县 · 鸡腿饭",k:620,p:34,s:["鸡腿去皮","米饭吃 2/3，另加一份烫青菜","配无糖豆浆"]},
+  {t:"轻食碗 · 鸡胸",k:450,p:38,s:["选鸡胸加双份蔬菜的款","酱选油醋汁，不要沙拉酱","主食选糙米或藜麦，半份"]},
+  {t:"番茄鸡蛋盖饭",k:550,p:24,s:["多加一份番茄鸡蛋","米饭吃 2/3 拳头","另加一份豆干补蛋白"]},
+  {t:"自制便当：鸡腿 + 豆腐",k:520,p:36,s:["前一晚多煮一个去皮鸡腿","配一块豆腐和 2 拳头青菜","米饭 1 拳头"]},
+  {t:"鸡汤面 + 加料",k:600,p:30,s:["加一个蛋和一份豆干","面条吃 2/3，先吃蛋和豆干","汤少喝"]},
+  {t:"木须肉盖饭",k:580,p:28,s:["鸡蛋加瘦肉加木耳","米饭 2/3 拳头","汤汁别拌饭"]},
+  {t:"豆腐脑 + 鸡蛋 + 杂粮馍",k:480,p:26,s:["豆腐脑要咸的不要糖","加 2 个鸡蛋","半个杂粮馍"]},
+  {t:"烤肉拌饭（鸡腿）",k:620,p:35,s:["选鸡腿肉拌饭，少酱","米饭吃一半","多加生菜和黄瓜"]},
+  {t:"水煮肉片 + 米饭",k:600,p:30,s:["肉片涮掉表面油再吃","底下的豆芽和青菜先吃","米饭 2/3 拳头"]},
+  {t:"鸡蛋灌饼 + 无糖豆浆",k:520,p:22,s:["加两个蛋","饼吃半个或不吃","配无糖豆浆补蛋白"]}
+];
+
+var DINNER = [
+  {t:"去皮鸡腿 + 大份青菜",k:420,p:30,s:["一个去皮鸡腿，别炸","2 拳头绿叶菜或西兰花","主食省掉或只吃半拳头"]},
+  {t:"豆腐 + 鸡蛋 + 蔬菜",k:400,p:28,s:["一块豆腐 + 2 个蛋","2 拳头青菜","不点主食"]},
+  {t:"麻辣烫 · 轻版",k:450,p:26,s:["只要豆腐、香菇、青菜、一份鸡腿肉","不要主食","汤少喝"]},
+  {t:"烤肉（鸡腿/瘦肉）+ 黄瓜",k:400,p:30,s:["5-8 串瘦肉串，少刷酱","配黄瓜和生菜","不配啤酒和饮料"]},
+  {t:"鸡蛋 + 牛奶 + 玉米",k:430,p:25,s:["2 个蛋 + 250 毫升牛奶","一根玉米当主食","再吃一份凉拌菜"]},
+  {t:"凉拌菜 + 豆干 + 半个馍",k:450,p:26,s:["大份凉拌菜打底","一份豆干","半个馍"]},
+  {t:"轻食碗 · 豆腐鸡胸",k:420,p:34,s:["豆腐或鸡胸 + 双份蔬菜","油醋汁","主食半份或不选"]},
+  {t:"蛋白粉 + 大份凉拌菜",k:300,p:30,s:["一勺蛋白粉冲水","大份凉拌黄瓜或西兰花垫底","晚上不饿就不用再加主食"]}
+];
+
+var BREAK = [
+  {t:"2 个蛋 + 牛奶 250 毫升",k:285,p:22,s:["鸡蛋煮或煎都行，少油","配一根黄瓜或一个番茄","不吃油条和胡辣汤"]},
+  {t:"豆腐脑（咸）+ 2 个蛋",k:280,p:23,s:["豆腐脑要咸的不要糖","加 2 个鸡蛋","配半个杂粮馍或不吃主食"]},
+  {t:"无糖豆浆 + 3 个蛋",k:305,p:25,s:["豆浆 250 毫升","3 个蛋，或 2 个蛋 + 一块豆腐","配一个番茄"]},
+  {t:"牛奶 + 鸡蛋 + 玉米",k:390,p:23,s:["250 毫升牛奶","2 个蛋","半根玉米"]},
+  {t:"鸡蛋卷饼（少酱）",k:400,p:24,s:["加两个蛋","酱少要","配无糖豆浆"]},
+  {t:"2 个蛋 + 蛋白粉冲牛奶",k:330,p:46,s:["一勺蛋白粉冲 250 毫升牛奶","配 2 个水煮蛋","蛋白直接到 46 克，上午不容易饿"]},
+  {t:"蛋白粉 + 玉米 + 番茄",k:400,p:31,s:["一勺蛋白粉冲水","一根玉米当主食","配一个番茄"]}
+];
+
+var CATS = ["蛋白","主食","蔬菜","外食","夜市","其他","面食","复合菜","手估"];
+var MEALS = ["早餐","午餐","晚餐","加餐"];
+var curMeal="午餐", curCat="蛋白", curR="午餐", curIdx=0;
+var picked=null, openCombo=-1, manualQty=[1,1,2], oilLevel=1;
+var BASE=1700, PRO=130, START=82, TARGET=75;
+var AVOID_OPT=["鱼","海带","金针菇","牛肉","羊肉","内脏","辣","坚果","奶制品","豆制品","猪肉","虾蟹"];
+var DEFAULT_ST={sex:"男",age:31,h:175,w:82,tg:65,act:1.2,start:"",avoid:["鱼","海带","金针菇"],kcal:1700,pro:130,done:false};
+var st=ls("cjs",null);
+var myFoods=ls("cjf",[]);
+
+function allFoods(){return FOODS.concat(myFoods);}
+function isAvoid(txt){
+  if(!st||!st.avoid)return false;
+  for(var i=0;i<st.avoid.length;i++){ if(txt.indexOf(st.avoid[i])>=0)return true; }
+  return false;
+}
+function calcTargets(s){
+  var bmr=(s.sex==="男")?(10*s.w+6.25*s.h-5*s.age+5):(10*s.w+6.25*s.h-5*s.age-161);
+  var tdee=Math.round(bmr*s.act);
+  var base=tdee-500;
+  var floor=(s.sex==="男")?1500:1200;
+  if(base<floor)base=floor;
+  base=Math.round(base/10)*10;
+  var pro=Math.round(s.w*1.6/5)*5;
+  var total=Math.max(0,s.w-s.tg);
+  var cut=Math.min(7,Math.max(3,total*0.4));
+  return {bmr:Math.round(bmr),tdee:tdee,base:base,pro:pro,total:total,cut:Math.round(cut*10)/10};
+}
+function applySettings(){
+  if(!st)st=DEFAULT_ST;
+  BASE=st.kcal||1700; PRO=st.pro||130; START=st.w||82; TARGET=st.tg||65; goal=BASE;
+}
+function updateHeader(){
+  if(E("proTip"))E("proTip").textContent=PRO;
+  var h=E("hSub");
+  if(!h||!st)return;
+  var t=calcTargets(st);
+  var ft=Math.round((st.w-t.cut)*10)/10;
+  h.textContent="当前 "+st.w+" → 目标 "+st.tg+" kg · 第一程先到 "+ft+" kg · 蛋白 "+PRO+" 克/天";
+  if(E("routeTitle")){
+    var weeks=Math.ceil(t.cut/0.6), allw=Math.ceil(t.total/0.75);
+    E("routeTitle").textContent="第一程约 "+weeks+" 周："+st.w+" → "+ft+" kg";
+    E("routeRange").textContent="共需减 "+t.total.toFixed(1)+" kg，第一程先减 "+t.cut+" kg，总共约 "+allw+" 周";
+    E("routeHint").textContent="共需减 "+t.total.toFixed(1)+" 公斤。不一次排完，先拿下第一程，周次从你开始那天算起。";
+  }
+}
+function calcMine(){
+  var s={sex:E("stSex").value,age:parseFloat(E("stAge").value)||30,h:parseFloat(E("stH").value)||170,
+         w:parseFloat(E("stW").value)||70,tg:parseFloat(E("stTg").value)||60,act:parseFloat(E("stAct").value)||1.2};
+  var t=calcTargets(s);
+  var ft=Math.round((s.w-t.cut)*10)/10;
+  var h="<div class='plan'><b>算出来的目标</b><br>"
+    +"基础代谢约 "+t.bmr+" 千卡，日常消耗约 "+t.tdee+" 千卡。<br>"
+    +"建议每日吃 <b>"+t.base+" 千卡</b>（在消耗基础上减 500，且不低于 "+(s.sex==="男"?1500:1200)+"），每天蛋白 <b>"+t.pro+" 克</b>。<br>"
+    +"共需减 "+t.total.toFixed(1)+" 公斤，约 "+Math.ceil(t.total/0.75)+" 周；第一程先减 "+t.cut+" 公斤到 "+ft+" 公斤。</div>";
+  E("calcBox").innerHTML=h;
+  E("stKcal").value=t.base;E("stPro").value=t.pro;
+}
+function saveSettings(){
+  st={sex:E("stSex").value,age:parseFloat(E("stAge").value)||30,h:parseFloat(E("stH").value)||170,
+      w:parseFloat(E("stW").value)||70,tg:parseFloat(E("stTg").value)||60,act:parseFloat(E("stAct").value)||1.2,
+      start:E("stStart").value||"",avoid:(st&&st.avoid)?st.avoid:[],
+      kcal:parseFloat(E("stKcal").value)||1700,pro:parseFloat(E("stPro").value)||130,done:true};
+  sv("cjs",st);applySettings();sv("cjg",st.kcal);
+  E("stMsg").innerHTML="<div class='advice'>已保存。现在按<b>每日 "+st.kcal+" 千卡、蛋白 "+st.pro+" 克</b>来算。</div>";
+  renderAll();renderSettings();updateHeader();
+}
+function renderSettings(){
+  if(!st)return;
+  E("stSex").value=st.sex;E("stAge").value=st.age;E("stH").value=st.h;
+  E("stW").value=st.w;E("stTg").value=st.tg;E("stAct").value=String(st.act);
+  E("stKcal").value=st.kcal;E("stPro").value=st.pro;
+  if(E("stStart"))E("stStart").value=st.start||"";
+  var h="",i,a,on;
+  for(i=0;i<AVOID_OPT.length;i++){
+    a=AVOID_OPT[i];on=st.avoid&&st.avoid.indexOf(a)>=0;
+    h+="<button style='display:inline-block;width:auto;margin:0 6px 6px 0;padding:7px 13px;border-radius:20px;font-size:13.5px;font-family:inherit;cursor:pointer;border:1px solid "
+      +(on?"#1f7a5c;background:#1f7a5c;color:#fff;font-weight:bold":"#e5eaf0;background:#fff;color:#6b7688")
+      +"' onclick='toggleAvoid(\""+a+"\")'>"+a+"</button>";
+  }
+  for(i=0;i<st.avoid.length;i++){
+    if(AVOID_OPT.indexOf(st.avoid[i])>=0)continue;
+    h+="<button style='display:inline-block;width:auto;margin:0 6px 6px 0;padding:7px 13px;border-radius:20px;background:#1f7a5c;color:#fff;border:0;font-size:13.5px;font-family:inherit;cursor:pointer' onclick='toggleAvoid(\""+st.avoid[i]+"\")'>"+st.avoid[i]+" ×</button>";
+  }
+  E("avoidBox").innerHTML=h;
+  var mh="",k,f;
+  for(k=0;k<myFoods.length;k++){
+    f=myFoods[k];
+    mh+="<div class='fitem'><span>"+f.f+" · 1"+f.u+" · "+f.k+" 千卡 · 蛋白 "+f.p+" 克</span>"
+      +"<button class='del' onclick='delMyFood("+k+")'>×</button></div>";
+  }
+  E("myFoodBox").innerHTML=mh||"<div class='empty'>还没有自定义食物</div>";
+}
+function toggleAvoid(a){
+  if(!st.avoid)st.avoid=[];
+  var i=st.avoid.indexOf(a);
+  if(i>=0)st.avoid.splice(i,1); else st.avoid.push(a);
+  sv("cjs",st);renderSettings();renderList();
+  if(curCat==="复合菜")renderCombo();
+  renderRec();
+}
+function addAvoid(){
+  var v=(E("avoidIn").value||"").trim();
+  if(!v)return;
+  if(st.avoid.indexOf(v)<0)st.avoid.push(v);
+  E("avoidIn").value="";sv("cjs",st);renderSettings();renderList();
+  if(curCat==="复合菜")renderCombo();
+}
+function addMyFood(){
+  var n=(E("mfN").value||"").trim();
+  var u=(E("mfU").value||"").trim()||"份";
+  var k=parseFloat(E("mfK").value);var p=parseFloat(E("mfP").value);
+  if(!n||!k){E("myFoodBox").innerHTML="<div class='empty'>名称和热量必须填</div>";return;}
+  myFoods.push({f:n,u:u,k:k,p:p||0,c:"我的",l:"y",d:1,tip:"自己加的食物"});
+  sv("cjf",myFoods);
+  E("mfN").value="";E("mfU").value="";E("mfK").value="";E("mfP").value="";
+  renderSettings();renderList();
+}
+function delMyFood(i){myFoods.splice(i,1);sv("cjf",myFoods);renderSettings();renderList();}
+function resetAll(){
+  if(!window.confirm("确定清空这台手机上的全部数据？今天记录、体重历史和自定义食物都会消失，无法恢复。"))return;
+  try{localStorage.removeItem("cjt");localStorage.removeItem("cjw");localStorage.removeItem("cjf");}catch(e){}
+  day={d:today(),items:[],water:0,checks:{},photos:[]};weights=[];myFoods=[];
+  sv("cjt",day);renderAll();renderSettings();renderList();
+}
+
+function today(){var d=new Date();return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2);}
+function ls(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+var day=ls("cjt",null);
+if(!day||day.d!==today()){ day={d:today(),items:[],water:0,checks:{},photos:[]}; sv("cjt",day); }
+if(!day.photos)day.photos=[];
+var weights=ls("cjw",[]);
+var goal=ls("cjg",BASE);
+
+function usedK(){var s=0;for(var i=0;i<day.items.length;i++)s+=day.items[i].k;return s;}
+function usedP(){var s=0;for(var i=0;i<day.items.length;i++)s+=day.items[i].p;return s;}
+function findFood(n){
+  for(var i=0;i<FOODS.length;i++){if(FOODS[i].f===n)return FOODS[i];}
+  for(var j=0;j<myFoods.length;j++){if(myFoods[j].f===n)return myFoods[j];}
+  return null;
+}
+function E(id){return document.getElementById(id);}
+
+function renderList(){
+  var kw=(E("search").value||"").trim();
+  var arr=[],src=allFoods();
+  for(var i=0;i<src.length;i++){
+    var f=src[i];
+    if(isAvoid(f.f)||isAvoid(f.tip))continue;
+    if(kw===""){ if(f.c!==curCat)continue; }
+    else if(f.f.indexOf(kw)<0 && f.tip.indexOf(kw)<0 && f.c.indexOf(kw)<0) continue;
+    arr.push(f);
+  }
+  var h="";
+  for(var j=0;j<arr.length;j++){
+    var f=arr[j];
+    var on=(picked&&picked.f===f.f)?" on":"";
+    h+="<button class='fitem"+on+"' onclick=\"pick('"+f.f.replace(/'/g,"")+"')\">"
+      +"<span><span class='dot "+f.l+"'></span>"+f.f+"</span>"
+      +"<em>"+Math.round(f.k)+" 千卡/1"+f.u+"</em></button>";
+  }
+  if(!h)h="<div class='empty'>没有找到。试试「复合菜」或「手估」，或者直接拍照发我。</div>";
+  E("flist").innerHTML=h;
+  renderSel();
+}
+function pick(name){
+  picked=findFood(name);
+  E("qty").value=picked?picked.d:1;
+  renderList();calc();
+}
+function renderSel(){
+  var box=E("selBox");
+  if(!picked){box.innerHTML="<div class='selbox'><div class='nm'>还没有选中</div><div class='hint' style='margin:0'>在上面点一个食物，或搜索菜名。</div></div>";return;}
+  var q=parseFloat(E("qty").value)||0;
+  var k=Math.round(picked.k*q), p=Math.round(picked.p*q);
+  var lamp=picked.l==="g"?"绿灯":(picked.l==="y"?"黄灯":"红灯");
+  var h="<div class='selbox'><div class='nm'>已选："+picked.f+"</div>"
+    +"<div class='row' style='margin-top:0'><input id='qty' type='number' inputmode='decimal' value='"+q+"' step='0.5' min='0.1' oninput='calc()'>"
+    +"<span class='u'>"+picked.u+"</span></div>"
+    +"<div class='big' style='margin:9px 0'><b id='kc'>"+k+"</b><span id='kcLab'>千卡 · 蛋白 "+p+" 克 · "+lamp+"</span></div>"
+    +"<button class='add' onclick='add()'>加入"+curMeal+"</button>"
+    +"<div id='advice'></div></div>";
+  box.innerHTML=h;
+}
+function calc(){
+  if(!picked){renderSel();return;}
+  var q=parseFloat(E("qty").value)||0;
+  E("kc").textContent=Math.round(picked.k*q);
+  var p=Math.round(picked.p*q);
+  E("kcLab").textContent="千卡 · 蛋白 "+p+" 克";
+  var left=goal-usedK();
+  var t;
+  if(picked.l==="r")t="红灯食物。真想吃就减半，先垫 2 拳头蔬菜，吃完走 15 分钟。";
+  else if(picked.l==="y")t="黄灯食物。可以吃，但今天其他餐要相应减一点主食。";
+  else t="绿灯食物，放心吃。";
+  if(left<picked.k*q)t+=" 注意：加完会超出今日额度，建议把份量减半。";
+  var a=E("advice");
+  a.className=(picked.l==="r")?"warn":"advice";
+  a.textContent=t;
+}
+function add(){
+  if(!picked)return;
+  var q=parseFloat(E("qty").value)||0;
+  if(q<=0)return;
+  var k=Math.round(picked.k*q), p=Math.round(picked.p*q);
+  day.items.push({m:curMeal,f:picked.f,q:q,u:picked.u,k:k,p:p,l:picked.l});
+  sv("cjt",day);renderAll();
+  feedback(picked.f,q,picked.u,k,p,picked.l);
+}
+function feedback(name,q,u,k,p,l){
+  var uu=usedK(),left=goal-uu,pr=usedP(),pg=PRO-pr;
+  var t="已记入"+curMeal+"：<b>"+name+" "+q+u+"，"+k+" 千卡，蛋白 "+p+" 克</b>。今日累计 "+uu+"/"+goal+" 千卡，蛋白 "+pr+"/"+PRO+" 克。";
+  var tips=[];
+  if(pg>0&&pr<PRO*0.5)tips.push("蛋白还差 "+pg+" 克，下一餐优先补：一勺蛋白粉（24 克）最省事，或 2 个蛋 + 一块豆腐，或一个去皮鸡腿。");
+  if(left<300&&left>=0)tips.push("今日额度只剩 "+left+" 千卡，下一餐以蛋白 + 蔬菜为主，主食减半或省掉。");
+  if(left<0)tips.push("今天已超出 "+Math.abs(left)+" 千卡，晚餐只吃蛋白和蔬菜，并多走 20 分钟。");
+  if(l==="r")tips.push("这是红灯食物，明后天把同类换成黄灯或绿灯款，别连着吃。");
+  if(tips.length===0)tips.push("这一餐结构没问题。吃完记得起身走 10-20 分钟。");
+  var a=E("advice");
+  a.className=(left<0||l==="r")?"warn":"advice";
+  a.innerHTML=t+"<br>"+tips.join("<br>");
+}
+function renderCombo(){
+  var h="<div class='hint'>常见的混着吃的菜，点一下展开组成，一键全部加入"+curMeal+"。</div>";
+  for(var i=0;i<COMBO.length;i++){
+    var c=COMBO[i];
+    var bad=false;
+    for(var q=0;q<c.parts.length;q++){ if(isAvoid(c.parts[q][0]))bad=true; }
+    if(bad||isAvoid(c.n))continue;
+    var kk=0,pp=0,det="";
+    for(var j=0;j<c.parts.length;j++){
+      var f=findFood(c.parts[j][0]);if(!f)continue;
+      var q=c.parts[j][1];
+      kk+=f.k*q;pp+=f.p*q;
+      det+="<li>"+f.f+" × "+q+f.u+" · "+Math.round(f.k*q)+" 千卡</li>";
+    }
+    var on=(openCombo===i)?" on":"";
+    h+="<button class='combo"+on+"' onclick='toggleCombo("+i+")'>"
+      +"<div class='cn'>"+c.n+"</div><div class='cm'>"+c.m+" · 合计约 "+Math.round(kk)+" 千卡，蛋白 "+Math.round(pp)+" 克</div></button>";
+    if(openCombo===i){
+      h+="<div class='parts'><ul style='margin:0;padding-left:18px'>"+det+"</ul>"
+        +"<button class='add' style='margin-top:9px' onclick='addCombo("+i+")'>全部加入"+curMeal+"</button></div>";
+    }
+  }
+  E("comboArea").innerHTML=h;
+}
+function toggleCombo(i){openCombo=(openCombo===i)?-1:i;renderCombo();}
+function addCombo(i){
+  var c=COMBO[i],kk=0,pp=0;
+  for(var j=0;j<c.parts.length;j++){
+    var f=findFood(c.parts[j][0]);if(!f)continue;
+    var q=c.parts[j][1];
+    day.items.push({m:curMeal,f:f.f,q:q,u:f.u,k:Math.round(f.k*q),p:Math.round(f.p*q),l:f.l});
+    kk+=f.k*q;pp+=f.p*q;
+  }
+  sv("cjt",day);renderAll();
+  var tips=[];
+  var pr=usedP(),pg=PRO-pr,left=goal-usedK();
+  tips.push("已按拆解加入"+curMeal+"：<b>合计 "+Math.round(kk)+" 千卡，蛋白 "+Math.round(pp)+" 克</b>。");
+  if(pg>0&&pr<PRO*0.5)tips.push("蛋白还差 "+pg+" 克，下一餐优先补：2 个蛋 + 一块豆腐。");
+  if(left<0)tips.push("今天已超出 "+Math.abs(left)+" 千卡，下一餐只吃蛋白和蔬菜，多走 20 分钟。");
+  else if(left<300)tips.push("额度只剩 "+left+" 千卡，下一餐主食减半。");
+  if(c.n.indexOf("泡馍")>=0||c.n.indexOf("煮馍")>=0)tips.push("馍吸汤又吸油，这份里主食是大头。下次馍少要一个，多要豆腐和青菜。");
+  tips.push("顺序别变：先吃菜和豆腐，最后吃馍。吃完走 15 分钟。");
+  var a=E("advice");
+  if(a){a.className=(left<0)?"warn":"advice";a.innerHTML=tips.join("<br>");}
+}
+function renderManual(){
+  var oCfg=[{n:"少油（清炒、水煮）",v:0},{n:"中油（家常炒）",v:90},{n:"多油（油泼、干煸、红油）",v:180}];
+  var h="<div class='hint'>菜名对不上就用这个：按自己拳头和掌心估，任何菜都能算。</div>";
+  var names=["主食（米饭面条馍）","蛋白质（肉蛋豆腐）","蔬菜"];
+  var units=["拳头","掌心","拳头"];
+  var ks=[175,150,30], ps=[4,22,2];
+  for(var i=0;i<3;i++){
+    h+="<div class='mline'><label>"+names[i]+"</label>"
+      +"<input id='m"+i+"' type='number' inputmode='decimal' value='"+manualQty[i]+"' step='0.5' min='0' oninput='calcManual()'>"
+      +"<span class='u'>"+units[i]+"</span></div>";
+  }
+  h+="<div class='mline'><label>用油量</label><select id='oilSel' onchange='calcManual()'>";
+  for(var j=0;j<oCfg.length;j++){h+="<option value='"+oCfg[j].v+"'"+(j===oilLevel?" selected":"")+">"+oCfg[j].n+"</option>";}
+  h+="</select></div>";
+  h+="<div class='big' style='margin:11px 0'><b id='mk'>0</b><span id='mkLab'>千卡</span></div>";
+  h+="<button class='add' onclick='addManual()'>按这个加入"+curMeal+"</button>";
+  h+="<div class='why' style='margin-top:9px'>1 拳头主食≈175 千卡 · 1 掌心蛋白≈150 千卡（22 克蛋白） · 1 拳头蔬菜≈30 千卡（油大按 2-3 倍）。</div>";
+  E("manualArea").innerHTML=h;
+  calcManual();
+}
+function calcManual(){
+  var ks=[175,150,30], ps=[4,22,2];
+  var k=0,p=0;
+  for(var i=0;i<3;i++){
+    var v=parseFloat(E("m"+i).value)||0;manualQty[i]=v;k+=ks[i]*v;p+=ps[i]*v;
+  }
+  if(E("oilSel")){oilLevel=E("oilSel").selectedIndex;k+=parseFloat(E("oilSel").value)||0;}
+  E("mk").textContent=Math.round(k);
+  E("mkLab").textContent="千卡 · 蛋白约 "+Math.round(p)+" 克";
+}
+function addManual(){
+  var ks=[175,150,30], ps=[4,22,2];
+  var k=0,p=0;
+  for(var i=0;i<3;i++){var v=parseFloat(E("m"+i).value)||0;k+=ks[i]*v;p+=ps[i]*v;}
+  if(E("oilSel"))k+=parseFloat(E("oilSel").value)||0;
+  var nm="手估："+manualQty[0]+"拳主食+"+manualQty[1]+"掌心蛋白+"+manualQty[2]+"拳蔬菜";
+  day.items.push({m:curMeal,f:nm,q:1,u:"份",k:Math.round(k),p:Math.round(p),l:"y"});
+  sv("cjt",day);renderAll();
+  var a=E("advice");
+  if(a){
+    var pr=usedP(),pg=PRO-pr,left=goal-usedK();
+    var t=["已记入"+curMeal+"：<b>"+nm+"，"+Math.round(k)+" 千卡，蛋白 "+Math.round(p)+" 克</b>。"];
+    if(pg>0&&pr<PRO*0.5)t.push("蛋白还差 "+pg+" 克，下一餐补 2 个蛋 + 一块豆腐。");
+    if(left<0)t.push("今天超了 "+Math.abs(left)+" 千卡，下一餐只吃蛋白和蔬菜。");
+    t.push("手估有误差，误差 20% 以内不影响判断。想更准就把盘子连拳头拍给我。");
+    a.className=(left<0)?"warn":"advice";a.innerHTML=t.join("<br>");
+  }
+}
+function onPhoto(ev){
+  var f=ev.target.files&&ev.target.files[0];if(!f)return;
+  var r=new FileReader();
+  r.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      var max=640, w=img.width, h=img.height;
+      if(w>max){h=Math.round(h*max/w);w=max;}
+      var cv=document.createElement("canvas");cv.width=w;cv.height=h;
+      cv.getContext("2d").drawImage(img,0,0,w,h);
+      day.photos.push(cv.toDataURL("image/jpeg",0.55));
+      sv("cjt",day);renderPhotos();
+      ev.target.value="";
+    };
+    img.src=e.target.result;
+  };
+  r.readAsDataURL(f);
+}
+function renderPhotos(){
+  var h="";
+  for(var i=0;i<day.photos.length;i++){
+    h+="<div class='pwrap'><img src='"+day.photos[i]+"' alt='餐食照片'><button onclick='delPhoto("+i+")'>×</button></div>";
+  }
+  E("phBox").innerHTML=h+(day.photos.length?"<div class='hint' style='width:100%;margin:4px 0 0'>存好了。把图发给我，我按拳头参照帮你估份量和热量。</div>":"");
+}
+function delPhoto(i){day.photos.splice(i,1);sv("cjt",day);renderPhotos();}
+
+function fillBar(id,arr,curv,cb){
+  var a=E(id);a.innerHTML="";
+  for(var i=0;i<arr.length;i++){(function(v){
+    var b=document.createElement("button");b.textContent=v;if(v===curv)b.className="on";
+    b.onclick=function(){cb(v);};a.appendChild(b);
+  })(arr[i]);}
+}
+function drawMeals(){fillBar("meals",MEALS,curMeal,function(v){curMeal=v;drawMeals();renderCombo();if(picked)renderSel();});}
+function drawRMeals(){fillBar("rmeals",["早餐","午餐","晚餐"],curR,function(v){curR=v;drawRMeals();renderRec();});}
+function drawCats(){
+  fillBar("cats",CATS,curCat,function(v){curCat=v;drawCats();switchArea();});
+}
+function switchArea(){
+  E("catArea").style.display=(curCat==="复合菜"||curCat==="手估")?"none":"block";
+  E("comboArea").style.display=(curCat==="复合菜")?"block":"none";
+  E("manualArea").style.display=(curCat==="手估")?"block":"none";
+  if(curCat==="复合菜")renderCombo();
+  if(curCat==="手估")renderManual();
+}
+function del(i){day.items.splice(i,1);sv("cjt",day);renderAll();}
+function addWater(){
+  var v=parseFloat(E("waterIn").value)||0;
+  day.water=Math.round(day.water+v);sv("cjt",day);
+  E("waterIn").value="";renderAll();
+}
+function chk(n){var k="c"+n;day.checks[k]=!day.checks[k];sv("cjt",day);renderAll();}
+
+function renderAll(){
+  var u=usedK(),p=usedP(),left=goal-u;
+  E("gNow").textContent=u;
+  E("gLeft").textContent=Math.max(0,left);
+  E("gPro").textContent=p;
+  var pc=Math.min(100,Math.round(u/goal*100));
+  E("bar").style.width=pc+"%";
+  E("pct").textContent=pc+"% · 蛋白 "+p+"/"+PRO+" 克";
+  E("goalLab").textContent="上限 "+goal+" 千卡";
+  E("aUsed").textContent=u;E("aPro").textContent=p;E("aLeft").textContent=left;
+  var h="";
+  for(var i=0;i<day.items.length;i++){
+    var it=day.items[i];
+    h+="<li><span class='lft'><span class='meal'>"+it.m+"</span>"+it.f+" × "+it.q+it.u+"</span><span>"+it.k+" 千卡<button class='del' onclick='del("+i+")'>×</button></span></li>";
+  }
+  E("log").innerHTML=h;
+  E("logEmpty").style.display=day.items.length?"none":"block";
+  E("waterNow").textContent=day.water;
+  for(var n=1;n<=3;n++){
+    var b=E("c"+n),on=!!day.checks["c"+n];
+    b.className=on?"on":"";b.textContent=on?"已完成":"未做";
+  }
+  renderMealTbl();renderDiag();renderNext();renderRec();drawTrend();drawWTbl();drawPlanAdj();renderPhotos();
+}
+function renderMealTbl(){
+  var h="<tr><th>餐次</th><th>内容</th><th>热量</th></tr>";
+  for(var m=0;m<MEALS.length;m++){
+    var k=0,c="",n=0;
+    for(var i=0;i<day.items.length;i++){
+      if(day.items[i].m!==MEALS[m])continue;
+      k+=day.items[i].k;n++;
+      c+=(c?"、":"")+day.items[i].f+" "+day.items[i].q+day.items[i].u;
+    }
+    if(!n)continue;
+    h+="<tr><td>"+MEALS[m]+"</td><td>"+c+"</td><td>"+k+"</td></tr>";
+  }
+  if(day.items.length===0)h+="<tr><td colspan='3'>今天还没有记录</td></tr>";
+  E("mealTbl").innerHTML=h;
+}
+function renderDiag(){
+  var u=usedK(),p=usedP(),left=goal-u,pg=PRO-p;
+  if(day.items.length===0){E("diag").innerHTML="<div class='advice'>今天还没记录。吃第一口前先把蔬菜吃完，这一条比算热量更管用。</div>";return;}
+  var red=0,veg=0,main=0;
+  for(var i=0;i<day.items.length;i++){
+    var it=day.items[i];
+    if(it.l==="r")red++;
+    if(it.f.indexOf("蔬菜")>=0||it.f.indexOf("黄瓜")>=0||it.f.indexOf("西兰花")>=0||it.f.indexOf("香菇")>=0||it.f.indexOf("青椒")>=0||it.f.indexOf("烩菜")>=0)veg++;
+    if(it.f.indexOf("米饭")>=0||it.f.indexOf("面")>=0||it.f.indexOf("馍")>=0||it.f.indexOf("馒头")>=0||it.f.indexOf("玉米")>=0||it.f.indexOf("红薯")>=0||it.f.indexOf("水饺")>=0)main++;
+  }
+  var t=[];
+  if(p<PRO*0.5)t.push("蛋白只到 "+p+" 克，还差 "+pg+" 克。今晚用 2 个蛋 + 一块豆腐，或一个去皮鸡腿补齐。");
+  else if(p<PRO*0.8)t.push("蛋白 "+p+" 克，还差 "+pg+" 克，晚餐再补一份豆制品或一份瘦肉就够。");
+  else t.push("蛋白 "+p+" 克，达标了，这块不用再管。");
+  if(main===0&&u>400)t.push("今天还没有主食记录。不是必须吃，但如果下午犯困或晚上馋，多半是碳水和蛋白都没吃够。");
+  if(veg===0&&u>400)t.push("今天没记蔬菜。蔬菜的作用是垫底延缓吸收，也是最容易少算热量的一块。");
+  if(red>0)t.push("今天有 "+red+" 次红灯食物。不用自责，明后天把同类换成黄灯款就行。");
+  if(left<0)t.push("已超出 "+Math.abs(left)+" 千卡。今晚只吃蛋白 + 蔬菜，并多走 20 分钟，明天照常，不要用饿一天来补。");
+  else if(left<300)t.push("额度只剩 "+left+" 千卡，晚餐以蛋白 + 蔬菜为主，主食减半。");
+  if(Math.abs(left)<150)t.push("今天吃得刚好，卡在额度上，这个状态就是对的。");
+  E("diag").innerHTML="<div class='"+(left<0?"warn":"plan")+"'><b>今天的情况</b><br>"+t.join("<br>")+"</div>";
+}
+function renderNext(){
+  var u=usedK(),p=usedP(),left=goal-u,pg=PRO-p;
+  var has={};
+  for(var i=0;i<day.items.length;i++)has[day.items[i].m]=true;
+  var next="晚餐";
+  if(!has["早餐"])next="早餐"; else if(!has["午餐"])next="午餐"; else if(!has["晚餐"])next="晚餐"; else next="加餐";
+  var t="<div class='hint'>按你今天的记录，下一餐是<b>"+next+"</b>，额度还剩 <b>"+left+"</b> 千卡，蛋白还差 <b>"+Math.max(0,pg)+"</b> 克。</div><ul class='tips'>";
+  if(left>=600)t+="<li>正常吃：1 个去皮鸡腿 + 2 拳头蔬菜 + 半拳头米饭 + 250 毫升牛奶。</li>";
+  else if(left>=380)t+="<li>额度中等：1 个去皮鸡腿或一块豆腐 + 2 拳头蔬菜，主食省掉或只吃半拳头。</li>";
+  else if(left>=150)t+="<li>额度不多：2 个蛋 + 2 拳头蔬菜，不要主食。</li>";
+  else t+="<li>额度用完：只吃 2 拳头蔬菜，或一杯无糖酸奶，然后出去走 20 分钟。</li>";
+  if(pg>35)t+="<li>蛋白缺口偏大（还差 "+pg+" 克）。省事的做法：一勺蛋白粉冲水（约 24 克蛋白，120 千卡），或 2 个蛋 + 一块豆腐（约 22 克蛋白，230 千卡）。</li>";
+  t+="<li>顺序别变：先吃蔬菜，再吃蛋白，主食放最后。</li>";
+  if(next==="晚餐")t+="<li>19:00 下班，18:30 先喝杯水吃个番茄，别空腹进夜市。</li>";
+  t+="</ul>";
+  E("nextMeal").innerHTML=t;
+}
+function pickList(){if(curR==="午餐")return LUNCH;if(curR==="晚餐")return DINNER;return BREAK;}
+var curRec=null;
+function renderRec(){
+  var list=pickList();
+  var u=usedK(),p=usedP(),left=goal-u,pg=PRO-p;
+  var best=-1,bi=0,seed=Math.floor(new Date().getTime()/86400000);
+  for(var i=0;i<list.length;i++){
+    var s=0;
+    s+=(list[i].k<=left+80)?60:-60;
+    if(list[i].k>left+150)s-=120;
+    if(pg>30)s+=(list[i].p>=30)?50:0;
+    if(left<450)s+=(list[i].k<=470)?40:-40;
+    s+=(i===(seed+curIdx)%list.length)?15:0;
+    if(s>best){best=s;bi=i;}
+  }
+  var r=list[bi];curRec=r;
+  var h="<div class='rec'><div class='t'>"+r.t+"</div><div class='m'>约 "+r.k+" 千卡 · 蛋白 "+r.p+" 克</div><ol>";
+  for(var j=0;j<r.s.length;j++)h+="<li>"+r.s[j]+"</li>";
+  h+="</ol></div>";
+  var why="";
+  if(left<450)why="你今天只剩 "+left+" 千卡，所以优先挑了热量低的这套。";
+  else if(pg>30)why="你蛋白还差 "+pg+" 克，所以优先挑了蛋白高的这套。";
+  else why="按今天的额度（剩 "+left+" 千卡）和蛋白缺口（"+Math.max(0,pg)+" 克）配的，正好落在范围内。";
+  if(weights.length>=2){
+    var last=weights[weights.length-1].w,prev=weights[weights.length-2].w,dl=prev-last;
+    if(dl<0.3)why+=" 另外本周体重没怎么动，这周主食再减 1/3 或多走 10 分钟，二选一即可。";
+    else if(dl>1)why+=" 本周掉得偏快，别再加大缺口，把主食或奶加回来一点。";
+  }
+  h+="<div class='why'>"+why+"</div>";
+  E("recBox").innerHTML=h;
+  E("recAdd").textContent="加入"+curR+"（约 "+r.k+" 千卡）";
+  E("recAdd").onclick=function(){addRec();};
+}
+function addRec(){
+  if(!curRec)return;
+  day.items.push({m:curR,f:curRec.t,q:1,u:"份",k:curRec.k,p:curRec.p,l:"y"});
+  sv("cjt",day);renderAll();
+}
+function swap(){curIdx++;renderRec();}
+function saveW(){
+  var w=parseFloat(E("wIn").value),wc=parseFloat(E("wcIn").value);
+  if(!w||w<30||w>200){E("wAdvice").innerHTML="<div class='warn'>体重填得不对，请填公斤数，比如 82.0</div>";return;}
+  var d=today(),found=false;
+  for(var i=0;i<weights.length;i++){if(weights[i].d===d){weights[i]={d:d,w:w,wc:wc||weights[i].wc};found=true;}}
+  if(!found)weights.push({d:d,w:w,wc:wc||0});
+  weights.sort(function(a,b){return a.d<b.d?-1:1;});
+  sv("cjw",weights);
+  E("wIn").value="";E("wcIn").value="";renderAll();
+}
+function drawTrend(){
+  if(weights.length===0){E("trend").innerHTML="<div class='empty' style='width:100%'>还没有体重记录</div>";return;}
+  var arr=weights.slice(-10),mx=arr[0].w,mn=arr[0].w;
+  for(var i=0;i<arr.length;i++){if(arr[i].w>mx)mx=arr[i].w;if(arr[i].w<mn)mn=arr[i].w;}
+  var rng=Math.max(2,mx-mn),h="";
+  for(var j=0;j<arr.length;j++){
+    var pc=Math.max(8,Math.round((mx-arr[j].w)/rng*72+16));
+    h+="<div style='height:"+pc+"px'><em>"+arr[j].w+"</em></div>";
+  }
+  E("trend").innerHTML=h;
+}
+function drawWTbl(){
+  var h="<tr><th>日期</th><th>体重</th><th>腰围</th><th>较上次</th><th></th></tr>";
+  if(weights.length===0){h+="<tr><td colspan='5'>还没有记录</td></tr>";E("wTbl").innerHTML=h;return;}
+  for(var i=weights.length-1;i>=0;i--){
+    var w=weights[i];
+    var d=(i>0)?(weights[i].w-weights[i-1].w).toFixed(1):"—";
+    h+="<tr><td>"+w.d+"</td><td>"+w.w+"</td><td>"+(w.wc||"—")+"</td><td>"+d+"</td><td><button class='del' onclick='delW("+i+")'>×</button></td></tr>";
+  }
+  E("wTbl").innerHTML=h;
+}
+function delW(i){weights.splice(i,1);sv("cjw",weights);renderAll();}
+function drawPlanAdj(){
+  var box=E("planAdj");
+  if(weights.length===0){box.innerHTML="<div class='advice'>先记一次体重，这里会给出「按当前体重该吃多少」和「计划要不要调整」。</div>";return;}
+  var cur=weights[weights.length-1].w,lost=START-cur;
+  var sug=Math.round((BASE-lost*20)/10)*10;
+  var floorK=(st&&st.sex==="女")?1200:1500;
+  if(sug<floorK)sug=floorK;
+  if(sug>BASE)sug=BASE;
+  var applied=(sug===goal)?"（已应用）":"";
+  var t="<div class='plan'><b>按当前体重 "+cur+" 公斤</b>：已减 "+lost.toFixed(1)+" 公斤，建议每日目标调到 <b>"+sug+" 千卡</b>"+applied+"。蛋白目标保持 "+PRO+" 克不变。<br>"
+    +"<button class='swap' style='margin-top:9px' onclick='applyGoal("+sug+")'>用这个目标</button></div>";
+  var rows=[];
+  if(weights.length>=2){
+    var last=weights[weights.length-1],prev=weights[weights.length-2];
+    var dl=prev.w-last.w,days=(new Date(last.d)-new Date(prev.d))/86400000;
+    var wk=days>0?(dl/days*7):0;
+    if(wk>0&&wk<0.3)rows.push("近两次称重折算每周只降 "+wk.toFixed(2)+" 公斤。执行到位的话，主食每餐再减 1/3，或每日多走 10 分钟，<b>二选一</b>，别同时改。");
+    else if(wk>=0.3&&wk<=1)rows.push("每周约降 "+wk.toFixed(2)+" 公斤，正好在健康区间，计划不用动。");
+    else if(wk>1)rows.push("每周降超过 "+wk.toFixed(2)+" 公斤，偏快。每日加 100-150 千卡，优先加主食或奶，别追求更快。");
+    else if(wk<0)rows.push("体重回升了 "+Math.abs(dl).toFixed(1)+" 公斤。先看是不是盐吃多了或没睡好；连续两周回升再调饮食。");
+    if(last.wc&&prev.wc&&(prev.wc-last.wc)>=1&&Math.abs(dl)<0.5)rows.push("腰围少了但体重没动，这是好信号，说明体脂在变，别改计划。");
+  }
+  if(lost>=3)rows.push("已经减了 "+lost.toFixed(1)+" 公斤，热量目标要跟着下调，别沿用开始时的食量。");
+  var fc=Math.round((START-calcTargets(st).cut)*10)/10;
+  if(cur<=fc+0.5)rows.push("第一程目标（"+fc+" 公斤）基本达成，接下来按第二程方案走："+fc+" → "+TARGET+" 公斤，预计再需 "+Math.ceil((cur-TARGET)/0.75)+" 周。");
+  box.innerHTML=t+(rows.length?"<div class='plan'><b>计划调整建议</b><br>"+rows.join("<br>")+"</div>":"");
+}
+function applyGoal(g){goal=g;sv("cjg",g);renderAll();}
+function backup(){
+  var o={items:day.items,water:day.water,checks:day.checks,weights:weights,goal:goal,d:today()};
+  E("bakBox").textContent=JSON.stringify(o);
+}
+function go(n,b){
+  for(var i=1;i<=6;i++)E("s"+i).className=(i===n?"on":"");
+  var bs=document.querySelectorAll("nav button");
+  for(var j=0;j<bs.length;j++)bs[j].className="";
+  b.className="on";window.scrollTo(0,0);
+}
+if(!st){ st=DEFAULT_ST; sv("cjs",st); }
+applySettings();
+drawMeals();drawRMeals();drawCats();switchArea();renderList();renderSettings();updateHeader();renderAll();
+if(!st.done){ var nb=document.querySelectorAll("nav button"); if(nb&&nb[5])go(6,nb[5]); }
+</script>
+</body>
+</html>
